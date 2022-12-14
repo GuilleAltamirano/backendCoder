@@ -1,5 +1,12 @@
+const { match } = require('assert');
+const express = require('express')
 const fs = require('fs')
+//express
+const app = express()
+const PORT = process.env.PORT || 8080
 
+
+//db Control
 class Contenedor {
     constructor(file){
         this.file = file;
@@ -39,8 +46,20 @@ class Contenedor {
             fs.writeFileSync(this.file, JSON.stringify([]))
         } catch (err) {console.log(`error => ${err}`)}
     }
+    
 }
-
 const container = new Contenedor('./db/products.txt')
-container.deleteAll()
+//get
+app.get('/products', (req, res) => {
+    res.send(container.getAll())
+})
+app.get('/productRandom', (req, res) => {
+    let random = Math.floor(Math.random() * 3)
+    console.log(random)
+    res.send(container.getById(random))
+})
 
+//server
+const server = app.listen(PORT, () => {
+    console.log(`Server HTTP run in PORT ${PORT}`)
+})
