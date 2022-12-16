@@ -1,12 +1,16 @@
 const express = require('express')
 const fs = require('fs')
-const { send } = require('process')
 const { Router } = express
 //express
 const app = express()
 const PORT = process.env.PORT || 8080
 //router
 const productsRouter = new Router()
+
+//app use
+app.use('/api/form', express.static(__dirname + '/public'))
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
 
 //db Control
 class Contenedor {
@@ -30,7 +34,7 @@ class Contenedor {
         try {
             let products = this.getAll()
             let productSearch = products.find((product) => product.id == id)
-            if (productSearch == undefined) {
+            if (productSearch === undefined) {
                 console.log(`The product ${id} is not defined`)
             }
             return productSearch
@@ -38,9 +42,11 @@ class Contenedor {
     }
 
     getAll () {
-        let productsFile = fs.readFileSync(this.file, 'utf-8')
-        let products = JSON.parse(productsFile)
-        return products
+        try {
+            let productsFile = fs.readFileSync(this.file, 'utf-8')
+            let products = JSON.parse(productsFile)
+            return products
+        } catch (err) {console.log(`error => ${err}`)}
     }
 
     deleteAll () {
@@ -51,20 +57,34 @@ class Contenedor {
     
     getAddProduct (product) {
         try {
-            let products = this.getAll()
-            products.push(product)
-            fs.writeFileSync(this.file, JSON.stringify(products))
+            if (product === undefined) {
+                console.log(`The product ${id} is not defined`)
+            } else {
+                let products = this.getAll()
+                products.push(product)
+                fs.writeFileSync(this.file, JSON.stringify(products))
+            }
         } catch (err) {console.log(`error => ${err}`)}
     }
 
     getDeleteId (id) {
         try {
             let products = this.getAll()
-            products.forEach(product => {
-                if (product === id) {
-                    product = {}
-                }
-            });
+            let search = id
+            let productUp = products.filter((item) => item.id != search)
+            fs.writeFileSync(this.file, JSON.stringify(productUp))
+        } catch (err) {console.log(`error => ${err}`)}
+    }
+
+    getProductUp (up, id) {
+        try {
+            let products = this.getAll()
+            let search = id
+            let update = up
+            let productsUp = products.filter((item) => item.id != search)
+            let productUp = {...update, id: search}
+            productsUp.push(productUp)
+            fs.writeFileSync(this.file, JSON.stringify(productsUp))
         } catch (err) {console.log(`error => ${err}`)}
     }
 }
@@ -75,50 +95,36 @@ productsRouter.get('/', (req, res) => {
     res.send(container.getAll())
 })
 productsRouter.get('/:id', (req, res) => {
-    let productSearch = req.params
-    res.send(container.getById(productSearch))
+    const search = req.params.id;
+    if (search === undefined || search === null) {
+        res.send({"error": `The product is not defined`})
+    } else {
+        res.send(container.getById(search))
+    }
 })
 //post
 productsRouter.post('/', (req, res) => {
     let product = req.body;
-    if (product == undefined) {
-        res.send({"error": `The product is not defined`})
-    } else {
-        res.send(container.getAddProduct(product))
-    }
+    container.getAddProduct(product)
+    res.send({"productAdd": product})
 })
 //put
 productsRouter.put('/:id', (req, res) => {
-    let search = req.params
-    let newProduct = req.body
-    if (container.getById(search) == undefined || container.getById(search) == null) {
-        res.send({"error": `The product ${search} is not defined`})
-    } else {
-        if (newProduct == undefined || newProduct == null) {
-            res.send({"error": `The product updated is not defined`})
-        } else {
-            container.getDeleteId(search)
-            container.getAddProduct(newProduct)
-            res.send({"ok": `The product updated ${newProduct}`})
-        }
-    }
+    let productUp = req.body;
+    let search = req.params.id;
+    container.getProductUp(productUp, search)
+    res.send({"ok": productUp})
 })
-
 //delete
 productsRouter.delete('/:id', (req, res) => {
-    let search = req.params
-    if (container.getById(search) == undefined || container.getById(search) == null) {
-        res.send({"error": `The product ${search} is not defined`})
-    } else {
-        container.getDeleteId(search)
-        res.send({"ok": `The product delete ${search}`})
-    }
+    let search = req.params.id
+    container.getDeleteId(search)
+    res.send({"ok": `The product delete ${search}`})
 })
 
-//app use
+//app use routes
 app.use('/api/products', productsRouter)
-app.use('/api/form', express.static(__dirname + '/public'))
-app.use(express.urlencoded({extended: true}))
+
 
 
 //server
