@@ -1,5 +1,1 @@
-[
-    {"title":"Coca-Cola","price":100,"thumbnail":"https://www.cocacola.es/content/dam/one/es/es2/coca-cola/products/productos/dic-2021/CC_Origal.jpg","id":1},
-    {"title":"Sprite","price":90,"thumbnail":"https://coca-colafemsa.com/wp-content/uploads/2020/02/9-1.png","id":2},
-    {"title":"Fanta","price":80,"thumbnail":"https://www.distribuidoraniki.com.ar/database/articulos/fotos/346/Fanta%20Naranja%20Retornable%20350cc%20vidrio%20ret__1.jpg","id":3}
-]
+[{"title":"Coca-Cola","price":100,"thumbnail":"https://www.cocacola.es/content/dam/one/es/es2/coca-cola/products/productos/dic-2021/CC_Origal.jpg","id":1},{"title":"Sprite","price":90,"thumbnail":"https://coca-colafemsa.com/wp-content/uploads/2020/02/9-1.png","id":2},{"title":"Fanta","price":80,"thumbnail":"https://www.distribuidoraniki.com.ar/database/articulos/fotos/346/Fanta%20Naranja%20Retornable%20350cc%20vidrio%20ret__1.jpg","id":3}]
