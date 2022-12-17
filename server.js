@@ -1,6 +1,7 @@
 const express = require('express')
 const fs = require('fs')
 const { Router } = express
+const handlebars = require("express-handlebars")
 //express
 const app = express()
 const PORT = process.env.PORT || 8080
@@ -8,9 +9,13 @@ const PORT = process.env.PORT || 8080
 const productsRouter = new Router()
 
 //app use
-app.use('/api/form', express.static(__dirname + '/public'))
+app.use(express.static(__dirname + '/public'))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
+app.engine("handlebars", handlebars.engine())
+
+app.set('views', './views')
+app.set('view engine', 'handlebars')
 
 //db Control
 class Contenedor {
@@ -92,34 +97,17 @@ const container = new Contenedor('./db/products.txt')
 
 //get
 productsRouter.get('/', (req, res) => {
-    res.send(container.getAll())
+    let products = container.getAll()
+    res.render('products', {products})
 })
-productsRouter.get('/:id', (req, res) => {
-    const search = req.params.id;
-    if (search === undefined || search === null) {
-        res.send({"error": `The product is not defined`})
-    } else {
-        res.send(container.getById(search))
-    }
+productsRouter.get('/form', (req, res) => {
+    res.render('form')
 })
 //post
-productsRouter.post('/', (req, res) => {
+productsRouter.post('/form', (req, res) => {
     let product = req.body;
     container.getAddProduct(product)
     res.send({"productAdd": product})
-})
-//put
-productsRouter.put('/:id', (req, res) => {
-    let productUp = req.body;
-    let search = req.params.id;
-    container.getProductUp(productUp, search)
-    res.send({"ok": productUp})
-})
-//delete
-productsRouter.delete('/:id', (req, res) => {
-    let search = req.params.id
-    container.getDeleteId(search)
-    res.send({"ok": `The product delete ${search}`})
 })
 
 //app use routes
