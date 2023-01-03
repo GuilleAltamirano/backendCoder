@@ -32,9 +32,9 @@ socket.on('comments', async data => {
         comments.map(item => {
             containerComm.innerHTML += `
             <div class="containerComments">
-                <h4>${item.user}</h4>
-                <p>${item.sms}</p>
-                <p>${item.fyh}</p>
+                <h4 class="user">${item.user}</h4>
+                <p class="sms">${item.sms}</p>
+                <p class="fyh">${item.fyh}</p>
             </div>
             `
         })

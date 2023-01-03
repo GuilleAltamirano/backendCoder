@@ -44,6 +44,24 @@ label {
     max-height: 100px;
 }
 
+/* comments styles */
+.containerComments{
+    display: flex;
+}
+.user {
+    color: blue;
+    padding: 2px;
+    margin: 5px;
+}
+.sms {
+    color: green;
+    margin: 5px;
+}
+.fyh {
+    color: maroon;
+    margin: 5px;
+}
+
 /* navbar */
 .navbar {
     display: flex;
