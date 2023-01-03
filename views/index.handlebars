@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Add products</title>
 </head>
 <body>
     {{> navbar}}
     <div class="divForm">
-        <form class="formContainer" action="/api/products/form" method="POST">
+        <form onsubmit="return addProduct()" class="formContainer" action="/api/products/form" method="POST">
             <h2 class="addProd">Add Products</h2>
             <label for="title">Title</label>
             <input type="text" id="title" name="title">
@@ -19,6 +19,20 @@
             <input type="url" id="thumbnail" name="thumbnail">
             <button>send</button>
         </form>
+    </div>
+    <div>
+        <form onsubmit="return addComment()">
+            <h2>comments</h2>
+            <label for="user">User</label>
+            <input type="email" id="user" name="user">
+            <label for="sms">Message</label>
+            <input type="text" id="sms" name="sms">
+            <button>send</button>
+        </form>
+        <div id="feedbacks"></div>
+    </div>
+    <div id="products">
+        <h2>Products</h2>
     </div>
     {{> footer}}
 </body>
